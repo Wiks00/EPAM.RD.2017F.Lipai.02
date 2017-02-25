@@ -5,20 +5,20 @@ namespace ServiceLibrary.Exceptions
     /// <summary>
     /// 
     /// </summary>
-    public class InvalidUserException : Exception
+    class UserServiceException : Exception
     {
         /// <summary>
         /// 
         /// </summary>
-        public InvalidUserException()
-        {           
+        public UserServiceException()
+        {
         }
 
         /// <summary>
         /// 
         /// </summary>
         /// <param name="message"></param>
-        public InvalidUserException(string message) : base(message)
+        public UserServiceException(string message) : base(message)
         {
         }
 
@@ -27,7 +27,7 @@ namespace ServiceLibrary.Exceptions
         /// </summary>
         /// <param name="message"></param>
         /// <param name="innerException"></param>
-        public InvalidUserException(string message, Exception innerException) : base(message, innerException)
+        public UserServiceException(string message, Exception innerException) : base(message, innerException)
         {
         }
     }

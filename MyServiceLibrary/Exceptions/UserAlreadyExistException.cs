@@ -1,22 +1,32 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.Serialization;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace MyServiceLibrary.Exceptions
+namespace ServiceLibrary.Exceptions
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public class UserAlreadyExistException : Exception
     {
+        /// <summary>
+        /// 
+        /// </summary>
         public UserAlreadyExistException()
         {          
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="message"></param>
         public UserAlreadyExistException(string message) : base(message)
         {
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="message"></param>
+        /// <param name="innerException"></param>
         public UserAlreadyExistException(string message, Exception innerException) : base(message, innerException)
         {
         }

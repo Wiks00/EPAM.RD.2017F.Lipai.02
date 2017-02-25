@@ -3,13 +3,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using MyServiceLibrary.Exceptions;
 using NUnit.Framework;
+using ServiceLibrary;
+using ServiceLibrary.Exceptions;
+using ServiceLibrary.Interfaces;
 
 namespace MyServiceLibrary.Tests
 {
     [TestFixture]
-    class UserServiceTests
+    public class UserServiceTests
     {
         [Test]
         public void Add_InvaliddUser_InvalidUserExceptionThrow()
@@ -121,7 +123,7 @@ namespace MyServiceLibrary.Tests
             IUserService service = new UserService();
             User[] users =
             {
-                new User { FirstName = "Ilya", LastName = "Lipai", Age = 20},
+                new User { FirstName = "Ilya", LastName = "Lipai", Age = 20 },
                 new User { FirstName = "And", LastName = "I'm", Age = 218 },
                 new User { FirstName = "Another", LastName = "Very", Age = 20 },
                 new User { FirstName = "User", LastName = "Imaginative", Age = 100500 }
