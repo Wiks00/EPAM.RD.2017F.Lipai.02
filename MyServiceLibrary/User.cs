@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace ServiceLibrary
 {
@@ -6,7 +7,7 @@ namespace ServiceLibrary
     /// 
     /// </summary>
     [Serializable]
-    public class User
+    public class User : ICloneable
     {
         /// <summary>
         /// unique identifier
@@ -27,5 +28,19 @@ namespace ServiceLibrary
         /// 
         /// </summary>
         public int Age { get; set; }
+
+        public static IEqualityComparer<User> GetComparer => new UserEqualityComparer(); 
+
+        public User Clone()
+          => new User
+          {
+              Age = this.Age,
+              FirstName = this.FirstName,
+              Identifier = this.Identifier,
+              LastName = this.LastName
+          };
+
+        object ICloneable.Clone()
+            => Clone();     
     }
 }

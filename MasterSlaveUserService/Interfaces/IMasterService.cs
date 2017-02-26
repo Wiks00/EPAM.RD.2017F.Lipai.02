@@ -12,6 +12,7 @@ namespace MasterSlaveUserService.Interfaces
         event EventHandler<ActionEventArgs> NotificationEvent;
         void Add(User user);
         void Delete(User user);
+        IEnumerable<User> Search(Predicate<User> predicate);
         void Notify(ActionEventArgs args);
     }
 }

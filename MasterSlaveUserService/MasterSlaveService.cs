@@ -16,10 +16,12 @@ namespace MasterSlaveUserService
     {
         private readonly List<AppDomain> domansList = new List<AppDomain>(); 
         private readonly List<ISlaveService> slaves = new List<ISlaveService>();
-        private readonly IMasterService master;
+        private readonly MasterService master;
+        public IUserService Service { get; set; }
 
         public MasterSlaveService(IUserService service)
         {
+            Service = service;
             master = CreateMaster(service);
             for (int i = 0; i < Configurator.GetSlaveConfig; i++)
             {
@@ -40,8 +42,7 @@ namespace MasterSlaveUserService
             domansList.Add(domain);
 
             var master = (MasterService)domain.CreateInstanceAndUnwrap
-                ("MasterSlaveUserService, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
-                    typeof (MasterService).FullName, false, BindingFlags.Default, null, new object[] {service}, null,
+                ("MasterSlaveUserService", typeof (MasterService).FullName, false, BindingFlags.CreateInstance, null, new object[] {service}, null,
                     null);
 
             return master;
@@ -59,11 +60,8 @@ namespace MasterSlaveUserService
                 ($"Slave{id}", null, appDomainSetup);
             domansList.Add(domain);
 
-            var slave = (SlaveService) domain.CreateInstanceAndUnwrap
-                ("MasterSlaveUserService, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
-                    typeof (SlaveService).FullName, false, BindingFlags.Default, null, new object[] {master}, null,
-                    null);
-            slave.Listen();
+            var slave = (SlaveService) domain.CreateInstanceAndUnwrap("MasterSlaveUserService", typeof (SlaveService).FullName );
+            slave.Listen(master);
             return slave;
         }
 

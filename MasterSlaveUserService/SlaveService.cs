@@ -11,12 +11,11 @@ namespace MasterSlaveUserService
 {
     public class SlaveService : MarshalByRefObject, ISlaveService
     {
-        private readonly List<User> localStorage;
-        private readonly IMasterService master;
+        private readonly HashSet<User> localStorage;
 
-        public SlaveService(IMasterService master)
+        public SlaveService()
         {
-            this.master = master;
+            localStorage = new HashSet<User>(User.GetComparer);
         }
 
         public IEnumerable<User> Search(Predicate<User> predicate)
@@ -26,9 +25,9 @@ namespace MasterSlaveUserService
                 throw new ArgumentNullException($"{nameof(predicate)} is null");
             }
 
-            var result = this.localStorage.Where(user => predicate(user));
+            var result = this.localStorage.Where(user => predicate(user)).Select(u => u.Clone()).ToList();
 
-            if (result.Count() < 0)
+            if (result.Count < 0)
             {
                 throw new UserNotFoundException("User(s) not found");
             }
@@ -36,7 +35,7 @@ namespace MasterSlaveUserService
             return result;
         }
 
-        public void Listen()
+        public void Listen(IMasterService master)
         {
             master.NotificationEvent += Synchronize;
         }

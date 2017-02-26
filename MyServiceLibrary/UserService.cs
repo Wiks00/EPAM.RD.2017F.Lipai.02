@@ -63,6 +63,8 @@ namespace ServiceLibrary
                 this.generateIdentifierFunction = generateIdentifierFunction;
             }
 
+            GetIdGenerator = this.generateIdentifierFunction;
+
             this.userEqualityComparer = userEqualityComparer ?? new UserEqualityComparer();
             this.storage = new HashSet<User>(this.userEqualityComparer);
 
@@ -86,6 +88,8 @@ namespace ServiceLibrary
         }
 
         public bool IsLogging { get; }
+
+        public Func<long?> GetIdGenerator { get; }
 
         /// <summary>
         /// 
@@ -178,7 +182,7 @@ namespace ServiceLibrary
 
             this.logger?.Info($"Requested {result.Count()} users: Id's {string.Concat(" ",result.Select(user => user.Identifier))}");
 
-            return result;
+            return result.ToList();
         }
 
         public void Dump(IDump dumper)
