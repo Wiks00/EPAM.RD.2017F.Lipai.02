@@ -9,10 +9,10 @@ namespace MasterSlaveUserService.Interfaces
 {
     public interface IMasterService
     {
-        event EventHandler<ActionEventArgs> NotificationEvent;
         void Add(User user);
         void Delete(User user);
         IEnumerable<User> Search(Predicate<User> predicate);
-        void Notify(ActionEventArgs args);
+        void SaveCurrentState(ISaveState saver);
+        void LoadPreviousSate(ISaveState saver);
     }
 }

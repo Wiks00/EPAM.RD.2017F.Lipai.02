@@ -2,34 +2,44 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net.NetworkInformation;
 using System.Reflection;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using MasterSlaveUserService.Interfaces;
+using ServiceConfiguration;
 using ServiceLibrary;
-using ServiceLibrary.Config;
 using ServiceLibrary.Interfaces;
 
 namespace MasterSlaveUserService
 {
     public class MasterSlaveService : IDisposable
     {
-        private readonly List<AppDomain> domansList = new List<AppDomain>(); 
-        private readonly List<ISlaveService> slaves = new List<ISlaveService>();
-        private readonly MasterService master;
-        public IUserService Service { get; set; }
+        private AppDomain domain;
+        public dynamic Instance { get; }
 
-        public MasterSlaveService(IUserService service)
+        public MasterSlaveService()
         {
-            Service = service;
-            master = CreateMaster(service);
-            for (int i = 0; i < Configurator.GetSlaveConfig; i++)
+            switch (Configurator.GetNodeConfig.ToLower())
             {
-                slaves.Add(CreateSlave(i,master));
+                case "master":
+                    Instance = CreateMaster();
+                    break;
+                case "slave":
+                    foreach (var config in Configurator.GetSlaveConfig)
+                    {
+                        {
+                            Instance = CreateSlave(Configurator.GetSlaveConfig.First());
+                            Console.WriteLine(config.Address + ":" + config.Port);
+                            break;
+                        }                      
+                    }                                       
+                    break;                   
             }
         }
 
-        private MasterService CreateMaster(IUserService service)
+        private IMasterService CreateMaster()
         {
             AppDomainSetup appDomainSetup = new AppDomainSetup
             {
@@ -39,16 +49,16 @@ namespace MasterSlaveUserService
 
             AppDomain domain = AppDomain.CreateDomain
                 ("Master", null, appDomainSetup);
-            domansList.Add(domain);
+
+            this.domain = domain;
 
             var master = (MasterService)domain.CreateInstanceAndUnwrap
-                ("MasterSlaveUserService", typeof (MasterService).FullName, false, BindingFlags.CreateInstance, null, new object[] {service}, null,
-                    null);
+                ("MasterSlaveUserService", typeof (MasterService).FullName);
 
             return master;
         }
 
-        private SlaveService CreateSlave(int id, IMasterService master)
+        private ISlaveService CreateSlave(SlaveConfiguration config)
         {
             AppDomainSetup appDomainSetup = new AppDomainSetup
             {
@@ -57,30 +67,18 @@ namespace MasterSlaveUserService
             };
 
             AppDomain domain = AppDomain.CreateDomain
-                ($"Slave{id}", null, appDomainSetup);
-            domansList.Add(domain);
+                ($"{config.Name}", null, appDomainSetup);
 
-            var slave = (SlaveService) domain.CreateInstanceAndUnwrap("MasterSlaveUserService", typeof (SlaveService).FullName );
-            slave.Listen(master);
+            this.domain = domain;
+
+            var slave = (SlaveService) domain.CreateInstanceAndUnwrap("MasterSlaveUserService", typeof (SlaveService).FullName, 
+                false, BindingFlags.CreateInstance, null, new object[] { config.Address, config.Port, null}, null, null);
             return slave;
-        }
-
-        public void Add(User user) => master.Add(user);
-
-        public void Delete(User user) => master.Delete(user);
-        public IEnumerable<User> Search(Predicate<User> predicate)
-        {
-            int slave = slaves.Count == 1 ? 0 : new Random().Next(0, slaves.Count - 1);
-
-            return slaves[slave].Search(predicate);
         }
 
         public void Dispose()
         {
-            foreach (var appDomain in domansList)
-            {
-                AppDomain.Unload(appDomain);
-            }
+            AppDomain.Unload(this.domain);
         }
     }
 }

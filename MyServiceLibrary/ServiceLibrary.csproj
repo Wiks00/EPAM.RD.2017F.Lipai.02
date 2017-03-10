@@ -53,13 +53,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Config\Configurator.cs" />
-    <Compile Include="Config\Dump\DumpCollection .cs" />
-    <Compile Include="Config\Dump\DumpElement.cs" />
-    <Compile Include="Config\Log\LogCollection .cs" />
-    <Compile Include="Config\Log\LogElement.cs" />
-    <Compile Include="Config\Service\ServiceElement.cs" />
-    <Compile Include="Config\Service\ServiceCollection .cs" />
     <Compile Include="Exceptions\InvalidIdentifierException.cs" />
     <Compile Include="Exceptions\InvalidUserException.cs" />
     <Compile Include="Exceptions\UserAlreadyExistException.cs" />
@@ -67,7 +60,6 @@
     <Compile Include="Exceptions\UserServiceException.cs" />
     <Compile Include="Interfaces\IDump.cs" />
     <Compile Include="Interfaces\IUserService.cs" />
-    <Compile Include="Config\StartupConfigSection.cs" />
     <Compile Include="UserEqualityComparer.cs" />
     <Compile Include="UserService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -81,6 +73,10 @@
     <ProjectReference Include="..\Logger\Logger.csproj">
       <Project>{e1f9c7c9-656f-456a-aabc-5ff6783849aa}</Project>
       <Name>Logger</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ServiceConfigurationSections\ServiceConfiguration.csproj">
+      <Project>{07730bd3-8177-4774-9d99-135147535687}</Project>
+      <Name>ServiceConfiguration</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup />

@@ -1,6 +1,6 @@
 ﻿using System.Configuration;
 
-namespace ServiceLibrary.Config.Dump
+namespace ServiceConfiguration
 {
     public class DumpElement : ConfigurationElement
     {

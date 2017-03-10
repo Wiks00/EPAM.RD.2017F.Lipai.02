@@ -8,7 +8,7 @@ using ServiceLibrary;
 namespace MasterSlaveUserService
 {
     [Serializable]
-    public class ActionEventArgs
+    public class Message
     {
         public Action Action { get; set;}
 
@@ -17,8 +17,7 @@ namespace MasterSlaveUserService
 
     public enum Action
     {
-        Add,
-        Delete,
-        Search
+        Add = 0,
+        Delete = 1
     }
 }

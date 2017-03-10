@@ -4,7 +4,7 @@ using System.Configuration;
 using System.IO;
 using System.Linq;
 using Logger;
-using ServiceLibrary.Config;
+using ServiceConfiguration;
 using ServiceLibrary.Exceptions;
 using ServiceLibrary.Interfaces;
 

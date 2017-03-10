@@ -2,10 +2,9 @@
 using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Net;
 
-namespace ServiceLibrary.Config
+namespace ServiceConfiguration
 {
     public static class Configurator
     {
@@ -24,7 +23,7 @@ namespace ServiceLibrary.Config
                     throw new ArgumentNullException($"{nameof(Section)} is null");
                 }
                 
-                return bool.Parse(Section.LogItems[0].IsEnable); 
+                return bool.Parse(Section.LogItem.IsEnable); 
             }
         }
 
@@ -37,11 +36,12 @@ namespace ServiceLibrary.Config
                     throw new ArgumentNullException($"{nameof(Section)} is null");
                 }
 
-                return Section.DumpItems[0].FileName;
+                return Section.DumpItem.FileName;
             }
         }
 
-        public static int GetSlaveConfig
+
+        public static string GetNodeConfig
         {
             get
             {
@@ -50,7 +50,26 @@ namespace ServiceLibrary.Config
                     throw new ArgumentNullException($"{nameof(Section)} is null");
                 }
 
-                return int.Parse(Section.ServiceItems[0].Amount);
+                return Section.NodeItem.Mode;
+            }
+        }
+
+        public static IEnumerable<SlaveConfiguration> GetSlaveConfig
+        {
+            get
+            {
+                if (ReferenceEquals(Section, null))
+                {
+                    throw new ArgumentNullException($"{nameof(Section)} is null");
+                }
+
+                return (from SlaveElement slave in Section.ServiceItems
+                       select new SlaveConfiguration
+                       {
+                           Address = slave.Ip,
+                           Name = slave.Name,
+                           Port = int.Parse(slave.Port)
+                       }).ToList();
             }
         }
     }

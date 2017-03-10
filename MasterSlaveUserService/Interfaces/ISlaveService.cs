@@ -10,6 +10,5 @@ namespace MasterSlaveUserService.Interfaces
     public interface ISlaveService
     {
         IEnumerable<User> Search(Predicate<User> predicate);
-        void Listen(IMasterService master);
     }
 }

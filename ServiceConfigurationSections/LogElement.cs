@@ -1,7 +1,6 @@
-﻿using System;
-using System.Configuration;
+﻿using System.Configuration;
 
-namespace ServiceLibrary.Config.Log
+namespace ServiceConfiguration
 {
     public class LogElement : ConfigurationElement
     {

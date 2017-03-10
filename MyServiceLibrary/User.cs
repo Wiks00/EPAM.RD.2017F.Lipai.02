@@ -41,6 +41,11 @@ namespace ServiceLibrary
           };
 
         object ICloneable.Clone()
-            => Clone();     
+            => Clone();
+
+        public override string ToString()
+        {
+            return $"{FirstName} {LastName} {Age}";
+        }
     }
 }
